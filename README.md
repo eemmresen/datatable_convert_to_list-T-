@@ -1,6 +1,7 @@
 # datatable_convert_to_list-T-
 datatable convert to list&lt;T> short code
 
+
 public List<T> ConvertToList<T>(DataTable dt)
     {
         var columnNames = dt.Columns.Cast<DataColumn>()
