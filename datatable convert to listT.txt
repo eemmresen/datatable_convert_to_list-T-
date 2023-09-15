@@ -1,4 +1,5 @@
- public List<T> ConvertToList<T>(DataTable dt)
+//1)solution
+public List<T> ConvertToList<T>(DataTable dt)
     {
         var columnNames = dt.Columns.Cast<DataColumn>()
                 .Select(c => c.ColumnName)
@@ -23,7 +24,7 @@
     }
 
 //------------------------------------------------------------------------------------------------------------
-
+//2)solution
  private static List<T> ConvertDataTable<T>(DataTable dt)
     {
         List<T> data = new List<T>();
@@ -58,4 +59,42 @@
             }
     
         return obj;
+    }
+//------------------------------------------------------------------------------------------------------------
+//3)solution
+public static List<T> BindList<T>(DataTable dt)
+    {
+       
+        var fields = typeof(T).GetProperties();
+
+        List<T> lst = new List<T>();
+
+        foreach (DataRow dr in dt.Rows)
+        {
+            
+            var ob = Activator.CreateInstance<T>();
+
+            foreach (var fieldInfo in fields)
+            {
+                foreach (DataColumn dc in dt.Columns)
+                {
+                   
+                    if (fieldInfo.Name == dc.ColumnName)
+                    {
+                       
+                        object value = dr[dc.ColumnName];
+                        if (fieldInfo.CanWrite)
+                        {
+                           
+                            fieldInfo.SetValue(ob, value);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            lst.Add(ob);
+        }
+
+        return lst;
     }
